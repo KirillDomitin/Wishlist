@@ -6,12 +6,12 @@ from dotenv import load_dotenv
 from alembic import context
 load_dotenv()
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[2]))
-from src.models.base import Base
-from src.models.user import User # noqa
-from src.models.wishlist import Wishlist # noqa
-from src.models.gift import Gift # noqa
-from src.core.config import settings # noqa
-from src.db.postgres.session import engine
+from models.base import Base
+from models.user import User # noqa
+from models.wishlist import Wishlist # noqa
+from models.gift import Gift # noqa
+from core.config import settings # noqa
+from db.postgres.session import engine
 
 target_metadata = Base.metadata
 # this is the Alembic Config object, which provides

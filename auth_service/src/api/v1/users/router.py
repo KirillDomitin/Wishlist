@@ -1,12 +1,11 @@
-import logging
 import sys
 
 from fastapi import APIRouter, Depends, status, HTTPException
-from .shcemas import UserCreate, UserRead
-from src.db.postgres.session import get_db
-from src.models.user import User
 
-from src.core.security import get_password_hash
+from core.security import get_password_hash
+from db.postgres.session import get_db
+from models.user import User
+from .shcemas import UserCreate, UserRead
 
 router = APIRouter()
 
@@ -22,8 +21,6 @@ async def create_user(
         db=Depends(get_db),
 ):
     hashed_password = get_password_hash(str(user_data.password.get_secret_value()))
-    print("Hashed password: ", hashed_password, file=sys.stderr)
-    print("Hashed password: ", hashed_password, file=sys.stderr)
     if db.query(User).filter(User.email == user_data.email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
 

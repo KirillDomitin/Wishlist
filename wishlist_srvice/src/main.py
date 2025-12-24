@@ -1,8 +1,7 @@
 from fastapi import FastAPI
-from fastapi.responses import ORJSONResponse
 
-from src.api.v1.router import api_router
-from src.core.config import settings
+from auth_service.src.api.v1.router import api_router
+from core.config import settings
 
 app = FastAPI(
     # Конфигурируем название проекта. Оно будет отображаться в документации
