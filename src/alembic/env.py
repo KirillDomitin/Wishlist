@@ -2,18 +2,15 @@ import pathlib
 import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
 from dotenv import load_dotenv
-import os
 from alembic import context
 load_dotenv()
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[2]))
-from src.db.postgres.models.base import Base
-from src.db.postgres.models.user import User
-from src.db.postgres.models.wishlist import Wishlist
-from src.db.postgres.models.gift import Gift
-from src.core.config import settings
+from src.models.base import Base
+from src.models.user import User # noqa
+from src.models.wishlist import Wishlist # noqa
+from src.models.gift import Gift # noqa
+from src.core.config import settings # noqa
 from src.db.postgres.session import engine
 
 target_metadata = Base.metadata

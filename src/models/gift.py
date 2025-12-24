@@ -1,14 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import uuid
 from decimal import Decimal
-from sqlalchemy import String, Text, Boolean, Numeric, ForeignKey
+from typing import TYPE_CHECKING
+
+from sqlalchemy import String, Text, Boolean, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.db.postgres.models.association import wishlist_gift_association
-from src.db.postgres.models.base import Base
-from src.db.postgres.models.common import TimeStampedMixin, uuid_pk
-from src.db.postgres.models.wishlist import Wishlist
+from .association import wishlist_gift_association
+from .base import Base
+from .common import TimeStampedMixin, uuid_pk
+
+if TYPE_CHECKING:
+    from .wishlist import Wishlist
+
+
 
 
 class Gift(Base, TimeStampedMixin):
@@ -30,5 +35,5 @@ class Gift(Base, TimeStampedMixin):
     wishlists: Mapped[list["Wishlist"]] = relationship(
         "Wishlist",
         secondary=wishlist_gift_association,
-        back_populates="gift",
+        back_populates="gifts",
     )

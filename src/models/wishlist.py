@@ -2,16 +2,14 @@
 # -*- coding: utf-8 -*-
 import uuid
 from typing import TYPE_CHECKING
-
 from sqlalchemy import String, ForeignKey, Text, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.db.postgres.models.base import Base
-from src.db.postgres.models.common import uuid_pk, TimeStampedMixin
 from .association import wishlist_gift_association
-
+from .base import Base
+from .common import uuid_pk, TimeStampedMixin
+from .gift import Gift
 if TYPE_CHECKING:
-    from .gift import Gift
     from .user import User
 
 
@@ -41,10 +39,10 @@ class Wishlist(Base, TimeStampedMixin):
     )
 
     # обратно к владельцу
-    owner: Mapped["User"] = relationship("User", back_populates="wishlist")
+    owner: Mapped["User"] = relationship("User", back_populates="wishlists")
 
-    gifts: Mapped[list["Gift"]] = relationship(
+    gifts: Mapped[list['Gift']] = relationship(
         "Gift",
         secondary=wishlist_gift_association,
-        back_populates="wishlist",
+        back_populates="wishlists",
     )
