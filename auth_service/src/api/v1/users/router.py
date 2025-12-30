@@ -1,6 +1,5 @@
-import sys
-
 from fastapi import APIRouter, Depends, status, HTTPException
+from sqlalchemy import select
 
 from core.security import get_password_hash
 from db.postgres.session import get_db
@@ -8,6 +7,7 @@ from models.user import User
 from .shcemas import UserCreate, UserRead
 
 router = APIRouter()
+
 
 @router.post(
     "/",
@@ -21,7 +21,10 @@ async def create_user(
         db=Depends(get_db),
 ):
     hashed_password = get_password_hash(str(user_data.password.get_secret_value()))
-    if db.query(User).filter(User.email == user_data.email).first():
+
+    result = await db.execute(select(User).where(User.email == user_data.email))
+    existing_user = result.scalar_one_or_none()
+    if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
 
     db_user = User(
@@ -30,6 +33,6 @@ async def create_user(
         full_name=user_data.full_name,
     )
     db.add(db_user)
-    db.commit()
-    db.refresh(db_user)  # чтобы подгрузить created_at
+    await db.commit()
+    await db.refresh(db_user)  # чтобы подгрузить created_at
     return UserRead.model_validate(db_user)
